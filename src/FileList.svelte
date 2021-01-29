@@ -28,7 +28,8 @@
 	}
 
     const handleClickPrev = (event: Event) => {
-        event.preventDefault()
+		event.preventDefault()
+		console.log("click prev", viewerIndex)
 		const newIndex = Math.max(viewerIndex - 1, 0)
 		viewerIndex = newIndex
 	}
