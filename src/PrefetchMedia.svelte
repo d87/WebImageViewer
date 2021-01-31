@@ -10,7 +10,7 @@
 {#if (ext in imageExt)}
     <img class="hidden" src="{path}" alt="gg"/>
 {:else if (ext in videoExt)}
-    <video class="hidden" src="{path}" loop autoplay controls>
+    <video class="hidden" src="{path}" >
         <track kind="captions"/>
     </video>
 {/if}
