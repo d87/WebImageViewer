@@ -1,4 +1,5 @@
 <script lang="ts">
+    import { onMount } from 'svelte';
     import Viewer from './Viewer.svelte'
     import { getFileList } from './api/api'
     import type { IFileList } from './api/api'
@@ -19,7 +20,11 @@
     let filePaths: Array<string>
     $: filePaths = filelist.Files.map(file => `${config.staticRoot}${path}${file}`)
 
-    getFileList(path).then(list => filelist = list)
+    // It's recommended to put the fetch in onMount rather than at the top level of the <script> because of server-side rendering (SSR). With the exception of onDestroy, lifecycle functions don't run during SSR, which means we can avoid fetching data that should be loaded lazily once the component has been mounted in the DOM.
+    // getFileList(path).then(list => filelist = list)
+    onMount(async () => {
+		filelist = await getFileList(path)
+	});
 
     const handleClickNext = (event: Event) => {
         event.preventDefault()
@@ -44,6 +49,12 @@
         viewerIndex = linkIndex
         viewerOpen = true
     }
+
+    // $: if (viewerOpen) {
+    //     document.querySelector("body").classList.add("overflow-hidden")
+    // } else {
+    //     document.querySelector("body").classList.remove("overflow-hidden")
+    // }
 </script>
 
 <div class="overflow-x-hidden">
