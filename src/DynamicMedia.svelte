@@ -1,7 +1,10 @@
 <script lang="ts">
     import { imageExt, videoExt, audioExt, getFileExt } from './config'
     import Panning from './Panning.svelte'
+    import AutoRotatedImage from './AutoRotatedImage.svelte'
     export let path: string
+    export let onScaleChanged: (scale: number) => void
+
     const ext = getFileExt(path)
 
     const eatEvent = (e: Event) => {
@@ -12,21 +15,17 @@
 </script>
 
 <style>
-    img {
-        max-width: 100%;
-        max-height: 100%;
-        object-fit: contain;
-    }
 </style>
 
 {#if (ext in imageExt)}
     {#key path}
-    <Panning on:click={eatEvent}>
-        <img src="{path}" alt="gg"/>
+    <Panning onScaleChanged={onScaleChanged}>
+        <!-- <img src="{path}" alt="gg"/> -->
+        <AutoRotatedImage src={path} />
     </Panning>
     {/key}
 {:else if (ext in videoExt)}
-    <video on:click={eatEvent} class="h-full w-full" src="{path}" loop autoplay controls><track kind="captions"/></video>
+    <video class="h-full w-full" src="{path}" loop autoplay controls><track kind="captions"/></video>
 {:else}
     <div>Unsupported file type</div>
 {/if}

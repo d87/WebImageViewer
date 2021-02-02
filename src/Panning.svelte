@@ -1,11 +1,14 @@
 <script lang="ts">
+    import { afterUpdate } from 'svelte';
     let scale = 1
     let xOffset = 0
     let yOffset = 0
     let panning = false
     let prevX = 0
     let prevY = 0
+    export let onScaleChanged: (scale: number) => void
 
+    /*
     const panTouchEnd = (event: TouchEvent|MouseEvent) => {
         panning = false
     }
@@ -44,6 +47,7 @@
         prevX = cX
         prevY = cY
     }
+    */
 
     const zoomIn = (event: Event) => {
         scale = scale + 0.5
@@ -56,6 +60,10 @@
     $: transforms = (scale > 1)
         ? `translate(${xOffset}px, ${yOffset}px) scale(${scale}) `
         : ""
+
+    afterUpdate(() => {
+        if (onScaleChanged) onScaleChanged(scale)
+    })
 
 </script>
 
