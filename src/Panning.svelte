@@ -89,25 +89,24 @@
 
 </style>
 
-<div class="max-w-full h-full">
-    <div class="relative block max-w-full h-full" style="transform: {transforms}"
-        on:touchstart|preventDefault={panTouchStart}
-        on:touchmove|preventDefault={panTouchMove}
-        on:touchend|preventDefault={panTouchEnd}
-        on:touchcancel|preventDefault={panTouchEnd}
+<!-- on:touchstart|preventDefault={panTouchStart}
+on:touchmove|preventDefault={panTouchMove}
+on:touchend|preventDefault={panTouchEnd}
+on:touchcancel|preventDefault={panTouchEnd}
 
-        on:click
+on:click
 
-        on:mousedown|preventDefault={panPointerStart}
-        on:mousemove|preventDefault={panPointerMove}
-        on:mouseup|preventDefault={panTouchEnd}
-        on:mouseout|preventDefault={panTouchEnd}
-    >
-        <button type="button" aria-label="Zoom Out" class="absolute top-0 right-1/2"
+on:mousedown|preventDefault={panPointerStart}
+on:mousemove|preventDefault={panPointerMove}
+on:mouseup|preventDefault={panTouchEnd}
+on:mouseout|preventDefault={panTouchEnd} -->
+<div class="contents">
+    <div class="relative" style="transform-origin: top; transform: {transforms}">
+        <button type="button" aria-label="Zoom Out" class="absolute z-40 top-0 right-1/2"
             on:click|preventDefault={zoomOut}
             on:touchstart|preventDefault={zoomOut}
         />
-        <button type="button" aria-label="Zoom in" class="absolute top-0 left-1/2"
+        <button type="button" aria-label="Zoom in" class="absolute z-40 top-0 left-1/2"
             on:click|preventDefault={zoomIn}
             on:touchstart|preventDefault={zoomIn}
         />

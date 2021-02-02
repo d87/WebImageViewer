@@ -50,11 +50,11 @@
         viewerOpen = true
     }
 
-    // $: if (viewerOpen) {
-    //     document.querySelector("body").classList.add("overflow-hidden")
-    // } else {
-    //     document.querySelector("body").classList.remove("overflow-hidden")
-    // }
+    $: if (viewerOpen) {
+        document.querySelector("body").classList.add("overflow-hidden")
+    } else {
+        document.querySelector("body").classList.remove("overflow-hidden")
+    }
 </script>
 
 <div class="overflow-x-hidden">
