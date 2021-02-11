@@ -15,4 +15,6 @@
     <!-- <video class="hidden" src="{path}" >
         <track kind="captions"/>
     </video> -->
+{:else if (ext in audioExt)}
+    <link rel=preload href="{path}" as=audio />
 {/if}
