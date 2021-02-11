@@ -34,7 +34,27 @@
 
     $: enterFullsceren = handleFullscreenEnter(fullscreenRoot)
 
-    $: imagePath = playlist[index]
+    $: if (imagePath !== playlist[index]) {
+        console.log("reset scroll")
+        window.scrollTo(0,0);
+    }
+
+    let imagePath
+    $: {
+        imagePath = playlist[index]
+        console.log("reset scroll")
+        if (fullscreenRoot) {
+            fullscreenRoot.scrollTop = 0
+            const isRightToLeft = true
+            if (isRightToLeft) {
+                const maxHorizontalScroll = fullscreenRoot.scrollWidth - fullscreenRoot.clientWidth
+                fullscreenRoot.scrollLeft = maxHorizontalScroll
+            }
+            else {
+                fullscreenRoot.scrollLeft = 0
+            }
+        }
+    }
     $: prefetchPath = playlist[index+1]
     $: prefetchPath2 = playlist[index+2]
     $: isVerticalAlignment = isFullscreen && !isOverflown
