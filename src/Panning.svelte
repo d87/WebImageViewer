@@ -101,7 +101,7 @@ on:mousemove|preventDefault={panPointerMove}
 on:mouseup|preventDefault={panTouchEnd}
 on:mouseout|preventDefault={panTouchEnd} -->
 <div class="contents">
-    <div class="relative" style="transform-origin: top; transform: {transforms}">
+    <div class="relative" style="transform-origin: top left; transform: {transforms}">
         <button type="button" aria-label="Zoom Out" class="absolute z-40 top-0 right-1/2"
             on:click|preventDefault={zoomOut}
             on:touchstart|preventDefault={zoomOut}
