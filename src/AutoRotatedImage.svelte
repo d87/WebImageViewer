@@ -1,5 +1,6 @@
 <script lang="ts">
     export let src
+    import { afterUpdate } from 'svelte';
     // const VERTICAL = 1
     // const HORIZONTAL = 2
     // let orientation = VERTICAL
@@ -9,6 +10,7 @@
 
     let forcedWidth = "auto"
     let forcedHeight = "auto"
+    let imageEl
     // let transforms = ""
 
     // const handleOnLoad = (event: Event) => {
@@ -41,6 +43,14 @@
             }
         };
     }
+
+    afterUpdate(() => {
+        if (!imageEl.naturalWidth || !imageEl.naturalHeight) {
+            sizepolling(imageEl, onSizeReceived)
+        } else {
+            onSizeReceived(imageEl.naturalWidth, imageEl.naturalHeight)
+        }
+    })
 
     $: scale = naturalWidth > naturalHeight ? naturalWidth / naturalHeight : 1
 
@@ -117,12 +127,13 @@
 
 </style>
 
+<!-- use:sizepolling={onSizeReceived} -->
 <div style="max-width: 100%; height: {forcedHeight}" class="{visiblityClass}" >
     <img
         style="transform-origin: top left; --rotation-scale: {scale};"
         class="{rotationClass}"
         src={src}
-        use:sizepolling={onSizeReceived}
+        bind:this={imageEl}
         alt="123"
     />
 </div>
