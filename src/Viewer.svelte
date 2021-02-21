@@ -2,12 +2,22 @@
     import DynamicMedia from './DynamicMedia.svelte'
     import PrefetchMedia from './PrefetchMedia.svelte'
     import { handleFullscreenEnter, handleFullscreenExit, listenfullscreen } from './fullscreen'
-    import { afterUpdate, onMount } from 'svelte';
+    import { RegisterKeybindings, UnregisterKeybindings } from './bindings'
+    import type { IBindingsTable } from './bindings'
+    import { afterUpdate, onMount, onDestroy } from 'svelte';
     export let playlist: string[]
     export let index: number
     export let onClose: () => void
     export let onPrev: (event: Event) => void
     export let onNext: (event: Event) => void
+
+    const bindings: IBindingsTable = {
+        "ARROWLEFT": onPrev,
+        "ARROWRIGHT": onNext,
+        "PAGEUP": onPrev,
+        "PAGEDOWN": onNext,
+    }
+
 
     let isFullscreen = false
     let isOverflown = false
@@ -25,6 +35,14 @@
     afterUpdate(() => {
         isOverflown = isOverflownY(fullscreenRoot)
         // console.log('vert align', isVerticalAlignment)
+    })
+
+    onMount(() => {
+        console.log('onMount')
+        RegisterKeybindings(bindings)
+    })
+    onDestroy(() => {
+        UnregisterKeybindings()
     })
 
     const handleOnScale = (scale) => {
