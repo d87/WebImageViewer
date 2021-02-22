@@ -57,13 +57,13 @@
     }
 </script>
 
-<div class="overflow-x-hidden">
+<div class="filelist overflow-x-hidden">
     <!-- {#await getFileList(path) then filelist} -->
         {#each filelist.Dirs as dirName}
-            <div><a href={`${path}${dirName}/`}>{ dirName }</a></div>
+            <div class="dir"><a href={`${path}${dirName}/`}>{ dirName }</a></div>
         {/each}
         {#each filelist.Files as file, index}
-            <div><a href={`${config.staticRoot}${path}${file}`} data-index="{index}" on:click={handleFileClick}>{ file }</a></div>
+            <div class="file"><a href={`${config.staticRoot}${path}${file}`} data-index="{index}" on:click={handleFileClick}>{ file }</a></div>
         {/each}
         {#if viewerOpen}
             <Viewer playlist={filePaths} onNext={handleClickNext} onPrev={handleClickPrev} onClose={handleClose} index={viewerIndex}/>
@@ -71,5 +71,22 @@
     <!-- {/await} -->
 </div>
 
-<style>
+<style global lang="postcss">
+    div.filelist > div {
+        text-overflow:ellipsis;
+        white-space:nowrap;
+        overflow:hidden;
+    }
+
+    div.filelist > div.dir > a::before {
+        content: "/"
+    }
+
+    div.filelist > div.file > a {
+        padding-left: 0.4rem;
+    }
+
+    div.filelist > div:nth-child(even) {
+        background-color:#f0f0f0;
+    }
 </style>

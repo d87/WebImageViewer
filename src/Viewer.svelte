@@ -4,7 +4,7 @@
     import { handleFullscreenEnter, handleFullscreenExit, listenfullscreen } from './fullscreen'
     import { RegisterKeybindings, UnregisterKeybindings } from './bindings'
     import type { IBindingsTable } from './bindings'
-    import { afterUpdate, onMount, onDestroy } from 'svelte';
+    import { onMount, onDestroy } from 'svelte';
     export let playlist: string[]
     export let index: number
     export let onClose: () => void
@@ -18,6 +18,8 @@
         "PAGEDOWN": onNext,
     }
 
+    let screenWidth: number
+    let screenHeight: number
 
     let isFullscreen = false
     let isOverflown = false
@@ -28,14 +30,16 @@
         isFullscreen = isFullscreenNow
     }
 
-    const isOverflownY = ({ clientHeight, scrollHeight }) => {
+    const isOverflownY = (clientHeight: number, scrollHeight: number) => {
         return scrollHeight > clientHeight
     }
 
-    afterUpdate(() => {
-        isOverflown = isOverflownY(fullscreenRoot)
-        // console.log('vert align', isVerticalAlignment)
-    })
+    const handleImageSizeUpdate = (event: CustomEvent) => {
+        console.log("[ImgUpdate]", event.detail.width, event.detail.height)
+        isOverflown = isOverflownY(fullscreenRoot.clientHeight, event.detail.height)
+        console.log("[Viewer Update]", Date.now(), "Overflowing Y", isOverflown, fullscreenRoot.clientHeight, event.detail.height)
+        console.log(`Dimensions W: ${fullscreenRoot.clientWidth} H: ${fullscreenRoot.clientHeight}`)
+    }
 
     onMount(() => {
         console.log('onMount')
@@ -45,22 +49,13 @@
         UnregisterKeybindings()
     })
 
-    const handleOnScale = (scale) => {
-        isOverflown = isOverflownY(fullscreenRoot)
-        console.log("new scale", scale, isVerticalAlignment)
-    }
-
     $: enterFullsceren = handleFullscreenEnter(fullscreenRoot)
 
-    $: if (imagePath !== playlist[index]) {
-        console.log("reset scroll")
-        window.scrollTo(0,0);
-    }
-
-    let imagePath
+    // Scroll Reset
+    let imagePath: string
     $: {
         imagePath = playlist[index]
-        console.log("reset scroll")
+        console.log("------------------")
         if (fullscreenRoot) {
             fullscreenRoot.scrollTop = 0
             const isRightToLeft = true
@@ -76,9 +71,11 @@
     $: prefetchPath = playlist[index+1]
     $: prefetchPath2 = playlist[index+2]
     $: isVerticalAlignment = isFullscreen && !isOverflown
-    $: contentClass = isVerticalAlignment ? "content-center" : "content-start"
-    // $: console.log(contentClass)
+    $: contentClass = isVerticalAlignment ? "content-center justify-center" : "content-start justify-start"
+    $: console.log("vert align", isVerticalAlignment)
 </script>
+
+<svelte:window bind:innerWidth={screenWidth} bind:innerHeight={screenHeight}/>
 
 <div class="fixed bottom-0 left-0 top-0 right-0 z-10 w-screen h-screen">
     <div class="absolute bottom-0 left-0 top-0 right-0 bg-black opacity-90"/>
@@ -98,7 +95,7 @@
             class="grid items-start {contentClass} overflow-scroll w-full"
         >
 
-            <DynamicMedia onScaleChanged={handleOnScale} path={imagePath}/>
+            <DynamicMedia on:imgclientupdate={handleImageSizeUpdate} path={imagePath}/>
             <PrefetchMedia path={prefetchPath}/>
             <PrefetchMedia path={prefetchPath2}/>
             <buttton on:click|stopPropagation={onPrev} class="fixed z-40 top-0 cursor-pointer left-0 w-10 h-full bg-black opacity-0 lg:hover:opacity-10"></buttton>

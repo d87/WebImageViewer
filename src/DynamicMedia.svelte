@@ -1,9 +1,8 @@
 <script lang="ts">
     import { imageExt, videoExt, audioExt, getFileExt } from './config'
-    import Panning from './Panning.svelte'
+    // import Panning from './Panning.svelte'
     import AutoRotatedImage from './AutoRotatedImage.svelte'
     export let path: string
-    export let onScaleChanged: (scale: number) => void
     let screenWidth
 
     const eatEvent = (e: Event) => {
@@ -28,12 +27,11 @@
 
 {#if (ext in imageExt)}
     {#if isMD}
-    <Panning onScaleChanged={onScaleChanged}>
         <!-- <img src="{path}" alt="gg"/> -->
-        <AutoRotatedImage src={path} />
-    </Panning>
+        <AutoRotatedImage on:imgclientupdate src={path} />
     {:else}
-        <img src="{path}" class="m-auto max-w-full max-h-full" alt="gg"/>
+        <img src="{path}" alt="gg"/>
+        <!-- <img src="{path}" class="m-auto max-w-full max-h-full" alt="gg"/> -->
     {/if}
 {:else if (ext in videoExt)}
     <video class="relative max-w-full" src="{path}" loop autoplay controls>
