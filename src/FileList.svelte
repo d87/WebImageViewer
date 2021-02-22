@@ -59,6 +59,9 @@
 
 <div class="filelist overflow-x-hidden">
     <!-- {#await getFileList(path) then filelist} -->
+        {#if path !== '/' }
+            <div class="dir"><a href={`${path}../`}>..</a></div>
+        {/if}
         {#each filelist.Dirs as dirName}
             <div class="dir"><a href={`${path}${dirName}/`}>{ dirName }</a></div>
         {/each}
