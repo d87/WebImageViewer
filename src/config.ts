@@ -7,6 +7,7 @@ export const videoExt = {
     'mp4': true,
     'webm': true,
     'm4v': true,
+    'mkv': true, // Chromium can play some mkvs if they have supported codecs inside
 }
 
 export const imageExt = {

@@ -26,7 +26,6 @@
     @tailwind utilities;
 
     main {
-        max-width: 240px;
         /* margin: 0 auto; */
     }
 

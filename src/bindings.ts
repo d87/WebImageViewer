@@ -8,9 +8,7 @@ const eventToBindString = (event: KeyboardEvent) => {
     const ctrl = event.ctrlKey
     const alt = event.altKey
     const shift = event.shiftKey
-    let key = event.key
-    const keyCode = event.keyCode
-    if (keyCode === 32) key = "SPACE"
+    let key = event.code
     return `${ctrl ? "CTRL-" : ""}${shift ? "SHIFT-" : ""}${alt ? "ALT-" : ""}${key.toUpperCase()}`
 }
 
@@ -19,16 +17,15 @@ let bindingsTable: IBindingsTable
 
 const handleKeyDown = (event: KeyboardEvent): void => {
     if (disableOnInputs) {
-        let element
-        if(event.target) element=event.target
-        if(element.nodeType === 3) element=element.parentNode;
+        let element: HTMLElement
+        if(event.target) element = event.target as HTMLElement
+        if(element.nodeType === 3) element = element.parentNode as HTMLElement
         if(element.tagName === 'INPUT' || element.tagName === 'TEXTAREA') return;
     }
 
     if (!bindingsTable) return
 
     const bindString = eventToBindString(event)
-    // console.log(bindString, event.key, event.keyCode)
     const func = bindingsTable[bindString]
 
     if (func === undefined) return
