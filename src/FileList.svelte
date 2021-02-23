@@ -6,7 +6,7 @@
     import { config } from './config'
     // export let path: string
     export let location: any
-    let viewerOpen: boolean
+    let viewerOpen: boolean = false
     let viewerIndex: number
     // let filelist = Promise.resolve({});
 
@@ -24,30 +24,63 @@
     // getFileList(path).then(list => filelist = list)
     onMount(async () => {
 		filelist = await getFileList(path)
+
+        const params = new URLSearchParams(location.search)
+        let i = parseInt(params.get("view"))
+
+        if (!isNaN(i)) {
+            i = Math.min(i, filelist.Files.length-1)
+            i = Math.max(i, 0)
+
+            viewerOpen = true
+            viewerIndex = i
+        }
+
+        const qString = viewerOpen ? `?view=${viewerIndex}` : ""
+        history.replaceState({ viewerIndex, viewerOpen }, null, `${location.origin}${location.pathname}${qString}`)
 	});
+
+    window.onpopstate = function(event: PopStateEvent) {
+        event.preventDefault()
+
+        if (event?.state?.viewerIndex) {
+            viewerIndex = event.state.viewerIndex
+        }
+        if (event?.state?.viewerOpen !== undefined) {
+            viewerOpen = event.state.viewerOpen
+        }
+    }
 
     const handleClickNext = (event: Event) => {
         event.preventDefault()
         const newIndex = Math.min(viewerIndex + 1, filelist.Files.length-1)
         viewerIndex = newIndex
+
+        history.pushState({ viewerIndex, viewerOpen }, null, `${location.origin}${location.pathname}?view=${viewerIndex}`)
     }
 
     const handleClickPrev = (event: Event) => {
         event.preventDefault()
-        console.log("click prev", viewerIndex)
         const newIndex = Math.max(viewerIndex - 1, 0)
         viewerIndex = newIndex
+
+        history.pushState({ viewerIndex, viewerOpen }, null, `${location.origin}${location.pathname}?view=${viewerIndex}`)
     }
 
-    const handleClose = () => { viewerOpen = false }
+    const handleClose = () => {
+        viewerOpen = false
+        history.pushState({ viewerIndex, viewerOpen }, null, `${location.origin}${location.pathname}`)
+    }
 
     const handleFileClick = (event: Event) => {
         event.preventDefault()
         const el = event.target as HTMLAnchorElement
-        console.log("Selecting", el.href)
         const linkIndex = parseInt(el.getAttribute('data-index'))
+
         viewerIndex = linkIndex
         viewerOpen = true
+
+        history.pushState({ viewerIndex, viewerOpen }, null, `${location.origin}${location.pathname}?view=${viewerIndex}`)
     }
 
     $: if (viewerOpen) {
