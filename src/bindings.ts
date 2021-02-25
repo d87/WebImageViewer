@@ -39,7 +39,6 @@ const handleKeyDown = (event: KeyboardEvent): void => {
 export const RegisterKeybindings = (bindings: IBindingsTable) => {
     if (document !== undefined) {
         bindingsTable = bindings
-        console.log("registered")
         document.addEventListener("keydown", handleKeyDown)
     }
 }

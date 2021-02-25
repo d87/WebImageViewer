@@ -1,13 +1,26 @@
 <script lang="ts">
     import { onMount } from 'svelte';
     import Viewer from './Viewer.svelte'
+    import Settings from './Settings.svelte'
     import { getFileList } from './api/api'
     import type { IFileList } from './api/api'
     import { config } from './config'
+    import { getSettings } from './settings_util'
     // export let path: string
     export let location: any
     let viewerOpen: boolean = false
     let viewerIndex: number
+
+    let settingsOpen: boolean = false
+    let settings = getSettings()
+
+    const handleOnSettingsChanged = (name, value) => {
+        settings = {
+            ...settings,
+            [name]: value
+        }
+        localStorage.setItem("settings", JSON.stringify(settings))
+    }
     // let filelist = Promise.resolve({});
 
     let path = location?.pathname || "/"
@@ -88,9 +101,18 @@
     } else {
         document.querySelector("body").classList.remove("overflow-hidden")
     }
+
+    const handleSettingsToggle = () => {
+        settingsOpen = !settingsOpen
+    }
 </script>
 
 <div class="filelist overflow-x-hidden">
+    <!-- <div class="fixed left-0 w-full flex justify-end " > -->
+        <button class="fixed material-icons right-0 {settingsOpen && "z-30"}" on:click|preventDefault={handleSettingsToggle}>
+            settings
+        </button>
+    <!-- </div> -->
     <!-- {#await getFileList(path) then filelist} -->
         {#if path !== '/' }
             <div class="dir"><a href={`${path}../`}>..</a></div>
@@ -101,13 +123,24 @@
         {#each filelist.Files as file, index}
             <div class="file"><a href={`${config.staticRoot}${path}${file}`} data-index="{index}" on:click={handleFileClick}>{ file }</a></div>
         {/each}
+        {#if settingsOpen}
+            <Settings  settings={settings} onChanged={handleOnSettingsChanged}></Settings>
+        {/if}
         {#if viewerOpen}
-            <Viewer playlist={filePaths} onNext={handleClickNext} onPrev={handleClickPrev} onClose={handleClose} index={viewerIndex}/>
+            <Viewer playlist={filePaths} settings={settings} onNext={handleClickNext} onPrev={handleClickPrev} onClose={handleClose} index={viewerIndex}/>
         {/if}
     <!-- {/await} -->
 </div>
 
 <style global lang="postcss">
+    button {
+        height: 2.5rem;
+        width: 2.5rem;
+        background-color: #bbb;
+        border-radius: 50%;
+        display: inline-block;
+        margin: 0.51rem;
+    }
     div.filelist > div {
         text-overflow:ellipsis;
         white-space:nowrap;

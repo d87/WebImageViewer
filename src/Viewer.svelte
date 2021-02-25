@@ -5,8 +5,10 @@
     import { RegisterKeybindings, UnregisterKeybindings } from './bindings'
     import type { IBindingsTable } from './bindings'
     import { onMount, onDestroy } from 'svelte';
+    import type { ISettings } from './settings_util';
     export let playlist: string[]
     export let index: number
+    export let settings: ISettings
     export let onClose: () => void
     export let onPrev: (event: Event) => void
     export let onNext: (event: Event) => void
@@ -58,7 +60,7 @@
         console.log("------------------")
         if (fullscreenRoot) {
             fullscreenRoot.scrollTop = 0
-            const isRightToLeft = true
+            const isRightToLeft = settings.rightToLeft
             if (isRightToLeft) {
                 const maxHorizontalScroll = fullscreenRoot.scrollWidth - fullscreenRoot.clientWidth
                 fullscreenRoot.scrollLeft = maxHorizontalScroll
