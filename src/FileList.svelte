@@ -50,7 +50,13 @@
         }
 
         const qString = viewerOpen ? `?view=${viewerIndex}` : ""
-        history.replaceState({ viewerIndex, viewerOpen }, null, `${location.origin}${location.pathname}${qString}`)
+
+        if (viewerOpen) {
+            history.replaceState({ viewerIndex, viewerOpen: false }, null, `${location.origin}${location.pathname}`)
+            history.pushState({ viewerIndex, viewerOpen: viewerOpen }, null, `${location.origin}${location.pathname}${qString}`)
+        } else {
+            history.replaceState({ viewerIndex, viewerOpen: viewerOpen }, null, `${location.origin}${location.pathname}`)
+        }
 	});
 
     window.onpopstate = function(event: PopStateEvent) {
@@ -69,7 +75,7 @@
         const newIndex = Math.min(viewerIndex + 1, filelist.Files.length-1)
         viewerIndex = newIndex
 
-        history.pushState({ viewerIndex, viewerOpen }, null, `${location.origin}${location.pathname}?view=${viewerIndex}`)
+        history.replaceState({ viewerIndex, viewerOpen }, null, `${location.origin}${location.pathname}?view=${viewerIndex}`)
     }
 
     const handleClickPrev = (event: Event) => {
@@ -77,7 +83,7 @@
         const newIndex = Math.max(viewerIndex - 1, 0)
         viewerIndex = newIndex
 
-        history.pushState({ viewerIndex, viewerOpen }, null, `${location.origin}${location.pathname}?view=${viewerIndex}`)
+        history.replaceState({ viewerIndex, viewerOpen }, null, `${location.origin}${location.pathname}?view=${viewerIndex}`)
     }
 
     const handleClose = () => {
