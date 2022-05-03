@@ -1,0 +1,40 @@
+{
+  "name": "@viewer/server",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "start": "ts-node -- ./server.ts",
+    "devtsc": "concurrently \"tsc -w\" \"nodemon dist/server.js\"",
+    "dbshell": "ts-node -- ./dbshell",
+    "dev": "nodemon --delay 2 --exec ts-node -- ./server.ts",
+    "build": "yarn clean:build && babel src --ignore src/**/__tests__ --out-dir dist --extensions '.ts,.tsx'",
+    "clean:build": "rm -rf dist",
+    "type-check": "tsc"
+  },
+  "dependencies": {
+    "alphanum-sort": "^1.0.2",
+    "cookie-parser": "^1.4.5",
+    "cors": "^2.8.5",
+    "express": "^4.17.1",
+    "nunjucks": "^3.2.2",
+    "serve-index": "^1.9.1",
+    "uuid": "^8.3.2",
+    "winston": "^3.3.3"
+  },
+  "devDependencies": {
+    "@babel/preset-env": "^7.5.5",
+    "@babel/preset-typescript": "^7.3.3",
+    "@types/node": "^14.14.22",
+    "nodemon": "^2.0.4",
+    "ts-node": "^9.1.1",
+    "tslint": "^6.1.3",
+    "tslint-config-prettier": "^1.18.0",
+    "typescript": "^4.0.2"
+  },
+  "babel": {
+    "presets": [
+      "@babel/preset-env",
+      "@babel/preset-typescript"
+    ]
+  }
+}
